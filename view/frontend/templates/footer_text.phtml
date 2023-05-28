@@ -1,0 +1,306 @@
+<style>
+   .bday_input_button{
+    color: #fff;
+    /* padding: 5px 20px !important; */
+    font-size: 14px !important;
+    background: red;
+    border: transparent;
+    background: #e60023 !important;
+    border: 1px solid #e60023 !important;
+    font-weight: 700;
+    border-radius: 5px !important;
+    display: block; /* added */
+}
+
+h2.bday_number{
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    text-transform: uppercase;
+    font-family: 'spartan';
+}
+
+.dob_prechild_sec{
+    position: absolute;
+    top: 50%;
+    left: 46%;
+    transform: translate(-50%, -50%);
+    background: #fad3cc;
+    /* padding: 20px; */
+    width: 450px;
+    text-align: center;
+}
+.dob_prechild_sec span{
+    font-weight: 500;
+    font-size: 10px;
+}
+
+div#dob-popup{
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999 !important;
+}
+input[type="date"] {
+  padding: 10px;
+  border: none;
+  background-color: #debbb5;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+
+.dob_prechild_sec input[type="submit"] {
+    width: auto;
+    padding: 10px 15px;
+    background: #E60023 !important;
+    border-radius: 10px !important;
+    font-weight: 600;
+    margin-left: 35%;
+}
+
+@media only screen and (max-width:500px){
+    .dob_prechild_sec{
+        width: 368px !important;
+    }
+    .dob_prechild_sec input[type="date"] {
+        font-size: 12px;
+        outline: none;
+    }
+    .dob_prechild_sec input[type="submit"] {
+        margin-left: 33%;
+    }
+}
+/* new css */
+        .part_of_dob_customer:focus {
+        border: 0px !important;
+        outline: 0px !important;
+        box-shadow: none !important;
+        border-bottom: 2px solid black !important;
+        }
+        input.bday_input_button {
+            margin-top: 15px;
+        }
+        input#dob_day ,input#dob_month ,input#dob_year {
+            width: auto;
+            height: 37px;
+            font-size: 23px;
+            text-align: center;
+            max-width: 201px;
+            background-color: transparent;
+            color: black;
+            border-bottom: 2px solid black;
+        }
+        .part_of_dob_customer::placeholder {
+          color: black !important;
+         }
+      
+        /* new css 05-05-2023 */
+            input#dob_customer{
+                display: none;
+            }
+            input#dob_day {
+             width: 60px;
+             }
+           input#dob_month {
+            width: 60px;
+             }
+            input#dob_year {
+             width: 85px;
+             }
+             #dob-popup  input[type="number"]{
+                border-left: 1px solid transparent !important;
+                border-right: 1px solid transparent !important;
+                border-top: 1px solid transparent !important;
+             }
+             #dob-popup .error-message {
+                    color: red !important;
+                }
+                /* 15-may-2023 */
+
+                .dob_prechild_sec form#myForm input {
+                        font-size: 17px;
+                        opacity: 1;
+                    }
+                    .dob_prechild_sec form#myForm input[type=number] {
+                        font-size: 17px;
+                        opacity: .7;
+                        border-bottom: 1px solid;
+                        margin: 0px 4px;
+                    }
+                    .dob_prechild_sec {
+                        padding-bottom: 20px;
+                    }
+                    #dob-popup .error-message {
+                        color: #e60023 !important;
+                        font-size: 11px;
+                        margin: 7px auto 15px;
+                    }
+                    /* 15-may-2023 */
+                    .dob_prechild_sec img{
+                        border: 1px solid transparent;
+                         border-radius: 20px;
+                    }
+                    .dob_prechild_sec{
+                        border: 1px solid transparent;
+                        border-radius: 5px;
+                        margin: 15px;
+                    }
+                    
+</style>
+<?php
+
+    $block = $this->getLayout()->createBlock('ArtM\Dob\Block\Index\Dbtest');
+    $customerId = $block->getCustomerId();
+    $customerDob = $block->getCustomerDob();
+    $saveDobSuccess = false;
+
+    // if ($dob) {
+    //     if ($saveDobSuccess) {
+    //         //$customerDob = $dob;
+    //        echo "<script>document.getElementById('dob-popup').style.display = 'none';</script>"; // Hide the popup after saving the DOB
+    //         //header("Refresh:0");
+    //     }
+    // }
+
+
+if ($customerId && !$customerDob) { // Display the popup if the customer is logged in and DOB is not set
+ 
+    $cookie_name = "Dob";
+    $cookie_value = "date";
+    $_html =   '<div id="parent-container">
+                    <div id="dob-popup" style="display:block;">
+                        <div class="dob_prechild_sec">
+                            <span style="position: absolute; top: 5px; right: 5px; cursor: pointer; font-size: 20px;" onclick="closePopup()">&times;</span> <!-- Cross sign to close the popup -->
+                            <!--  <h2 class="bday_text">Please enter your Date of Birth</h2>  -->
+                            <img src="'. $this->getViewFileUrl('ArtM_Dob::images/birthday card_1.jpg') .'" alt="Cupcake DOB">
+                                <form method="post" action="" id="myForm">
+                                    <!--  new Dob  -->
+                                    '. $block->getBlockHtml('formkey').'<input type="text" id="dob_customer" name="dob_customer" />
+                                    <div class="error_in_date" style="display:none;">true</div>
+
+                                    <input class="part_of_dob_customer" type="number" id="dob_day" name="day" min="1" max="31" length="2" maxlength="2" placeholder="DD">
+                                    <input class="part_of_dob_customer" type="number" id="dob_month" name="month" min="1" max="12" length="2" maxlength="2" placeholder="MM">
+                                    <input class="part_of_dob_customer" type="number" id="dob_year" name="year" min="1900" max="2100" length="4" maxlength="4" placeholder="YYYY">
+                                    <!--  new Dob  -->
+                                    <input type="submit" value="Save my DOB" class="bday_input_button">
+                                </form>
+
+                                <div class="error-message"></div>
+                        <span>DOB Can Not Be Updated Once Submitted</span>
+                        </div>
+                    </div>
+                </div>';             
+    // Set the cookie expiration time to 30 days from now in GMT time    30 * 24 * 60 * 60
+    $expiration = strtotime(gmdate("D, d M Y H:i:s T", time() + (30 * 24 * 60 * 60)));    
+   // Check if the cookie is set
+    if(isset($_COOKIE[$cookie_name])) {
+        
+    } else {
+         // Set the cookie
+        setcookie($cookie_name, $cookie_value, $expiration, "/");
+        $_htmlveiw = $_html;
+        echo $_html;
+      }   
+    // Check if the cookie has expired
+    if(isset($_COOKIE[$cookie_name]) && time() > $expiration) {
+      // Delete the cookie by setting an expiration time in the past
+      setcookie($cookie_name, "", time() - 3600, "/");
+    }
+
+?>
+    <script>
+        if (document.querySelector('#popupreviewmodel')) {
+              console.log('already one popup has display');
+              document.getElementById("dob-popup").style.display = "none";
+            }
+            function closePopup() {
+            document.getElementById("dob-popup").style.display = "none";
+            }
+    </script>
+
+<script>
+     window.addEventListener('click', function(event) {
+           
+             var popup = document.getElementById('dob-popup');
+            if (event.target == popup) {
+                 popup.style.display = "none";
+             }
+         });
+</script>
+<!-- new 05-may-2023 -->
+
+<script>
+    require(['jquery', 'bootstrap'], function(jQuery) {
+        jQuery(document).ready(function() {
+            function validateDate() {
+                var valid = true;
+                jQuery('input.part_of_dob_customer').each(function() {
+                    var input = jQuery(this);
+                    var val = input.val();
+                    var max = input.attr('max');
+                    var min = input.attr('min');
+                    if (isNaN(val) || parseInt(val) > max || parseInt(val) < min) {
+                        input.css("color", "#e60023");
+                        valid = false;
+                    } else {
+                        input.css("color", "black");
+                    }
+                    if (val.length == input.attr('length')) {
+                        input.next('input').focus();
+                    }
+                });
+                if (valid) {
+                    jQuery('.error_in_date').text('true');
+                } else {
+                    jQuery('.error_in_date').text('false');
+                }
+            }
+            jQuery('input.part_of_dob_customer').on('input', function(e) {
+                validateDate();
+                var day = jQuery('#dob_day').val();
+                var month = jQuery('#dob_month').val();
+                var year = jQuery('#dob_year').val();
+                if (jQuery('.error_in_date').text() == 'true') {
+                    jQuery('#dob_customer').val(day + '-' + month + '-' + year);
+                }
+            });
+
+            jQuery('#myForm').on('submit', function(e) {
+                validateDate();
+                if (jQuery('.error_in_date').text() != 'true') {
+                    e.preventDefault();
+                    jQuery('.error-message').text('Please enter a valid date');
+                }
+            });
+
+            
+            jQuery('#myForm').submit(function (event) {
+            event.preventDefault();
+            var formData = jQuery(this).serialize();
+            jQuery.ajax({
+                url: '/dob/index/index/',
+                method: 'POST',
+                dataType: 'json',
+                data: formData,
+                success: function (response) {
+                    if(response.result == "False"){
+                        jQuery('.error-message').text('Please enter a valid date');
+                    }else{
+                        document.getElementById('dob-popup').style.display = 'none';
+                    }
+                }
+                
+                });
+            });
+
+            
+        });
+    });
+</script>
+<?php
+}
+?>
